@@ -644,3 +644,13 @@ button {
     display: none;
   }
 }
+.messages {
+  overflow-y: auto;
+  scroll-behavior: smooth;
+
+  padding: 36px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}

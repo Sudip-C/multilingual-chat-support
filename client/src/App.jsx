@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 
 function App() {
@@ -28,49 +28,48 @@ function App() {
     setLoading(true);
 
     try {
-  const API_URL = import.meta.env.VITE_API_URL;
+      const API_URL = import.meta.env.VITE_API_URL;
 
+      const response = await fetch(`${API_URL}/api/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: userMessage,
+        }),
+      });
 
-  const response = await fetch(`${API_URL}/api/chat`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      message: userMessage,
-    }),
-  });
+      if (!response.ok) {
+        const errorText = await response.text();
 
-  if (!response.ok) {
-    const errorText = await response.text();
+        console.error("API Error:", response.status, errorText);
 
-    console.error("API Error:", response.status, errorText);
+        throw new Error(`Server returned ${response.status}`);
+      }
 
-    throw new Error(`Server returned ${response.status}`);
-  }
+      const data = await response.json();
 
-  const data = await response.json();
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          text: data.reply || "Sorry, I couldn't generate a response.",
+        },
+      ]);
+    } catch (error) {
+      console.error("Chat request failed:", error);
 
-  setMessages((prev) => [
-    ...prev,
-    {
-      role: "assistant",
-      text: data.reply || "Sorry, I couldn't generate a response.",
-    },
-  ]);
-} catch (error) {
-  console.error("Chat request failed:", error);
-
-  setMessages((prev) => [
-    ...prev,
-    {
-      role: "assistant",
-      text: "Unable to connect to the AI server.",
-    },
-  ]);
-} finally {
-  setLoading(false);
-}
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          text: "Unable to connect to the AI server.",
+        },
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleKeyDown = (event) => {
@@ -88,7 +87,14 @@ function App() {
       },
     ]);
   };
+  const messagesEndRef = useRef(null);
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+  }, [messages, loading]);
   return (
     <div className="app-shell">
       <aside className="sidebar">
@@ -150,10 +156,7 @@ function App() {
 
         <section className="messages">
           {messages.map((message, index) => (
-            <div
-              key={index}
-              className={`message-row ${message.role}`}
-            >
+            <div key={index} className={`message-row ${message.role}`}>
               <div className={`avatar ${message.role}`}>
                 {message.role === "assistant" ? "AI" : "YOU"}
               </div>
@@ -175,30 +178,22 @@ function App() {
               </div>
             </div>
           )}
+
+          <div ref={messagesEndRef} />
         </section>
 
         <footer className="composer-wrapper">
           <div className="suggestions">
-            <button
-              onClick={() =>
-                setInput("How can I return my product?")
-              }
-            >
+            <button onClick={() => setInput("How can I return my product?")}>
               Return policy
             </button>
 
-            <button
-              onClick={() =>
-                setInput("मेरा ऑर्डर कब आएगा?")
-              }
-            >
+            <button onClick={() => setInput("मेरा ऑर्डर कब आएगा?")}>
               Delivery status
             </button>
 
             <button
-              onClick={() =>
-                setInput("আমি কি product return করতে পারি?")
-              }
+              onClick={() => setInput("আমি কি product return করতে পারি?")}
             >
               বাংলা Support
             </button>

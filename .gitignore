@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+client/package-lock.json
+server/package-lock.json
+
+# Environment variables
+.env
+.env.*
+client/.env
+server/.env
+
+# Build output
+dist/
+client/dist/
+server/dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

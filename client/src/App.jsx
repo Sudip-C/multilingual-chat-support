@@ -8,7 +8,6 @@ function App() {
       text: "Hello! I'm your AI support assistant. How can I help you today?",
     },
   ]);
-const API_URL = import.meta.env.VITE_API_URL;
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -29,38 +28,49 @@ const API_URL = import.meta.env.VITE_API_URL;
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/api/chat`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: userMessage,
-        }),
-      });
+  const API_URL = import.meta.env.VITE_API_URL;
 
-      const data = await response.json();
 
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          text: data.reply || "Sorry, I couldn't generate a response.",
-        },
-      ]);
-    } catch (error) {
-      console.error(error);
+  const response = await fetch(`${API_URL}/api/chat`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      message: userMessage,
+    }),
+  });
 
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          text: "Unable to connect to the AI server.",
-        },
-      ]);
-    } finally {
-      setLoading(false);
-    }
+  if (!response.ok) {
+    const errorText = await response.text();
+
+    console.error("API Error:", response.status, errorText);
+
+    throw new Error(`Server returned ${response.status}`);
+  }
+
+  const data = await response.json();
+
+  setMessages((prev) => [
+    ...prev,
+    {
+      role: "assistant",
+      text: data.reply || "Sorry, I couldn't generate a response.",
+    },
+  ]);
+} catch (error) {
+  console.error("Chat request failed:", error);
+
+  setMessages((prev) => [
+    ...prev,
+    {
+      role: "assistant",
+      text: "Unable to connect to the AI server.",
+    },
+  ]);
+} finally {
+  setLoading(false);
+}
   };
 
   const handleKeyDown = (event) => {

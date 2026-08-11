@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import OpenAI from "openai";
 
 dotenv.config();
 
@@ -19,10 +18,6 @@ app.use(
 );
 app.use(express.json());
 
-const ai = new OpenAI({
-  apiKey: process.env.NVIDIA_API_KEY,
-  baseURL: "https://integrate.api.nvidia.com/v1",
-});
 
 app.get("/", (req, res) => {
   res.json({

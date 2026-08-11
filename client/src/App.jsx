@@ -8,7 +8,7 @@ function App() {
       text: "Hello! I'm your AI support assistant. How can I help you today?",
     },
   ]);
-
+const API_URL = import.meta.env.VITE_API_URL;
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -29,7 +29,7 @@ function App() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/chat", {
+      const response = await fetch(`${API_URL}/api/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

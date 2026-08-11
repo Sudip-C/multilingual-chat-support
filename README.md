@@ -62,16 +62,7 @@ Opening the backend root endpoint should return:
 
 ## Screenshots
 
-> Add current screenshots of the deployed application to the `assets/` directory and update the paths below.
 
-<!--
-Recommended filenames:
-
-assets/supportflow-desktop.png
-assets/supportflow-chat.png
-assets/supportflow-mobile.png
-
-Then uncomment:
 
 <p align="center">
   <img src="./assets/supportflow-desktop.png" alt="SupportFlow desktop interface" width="900">
@@ -80,7 +71,11 @@ Then uncomment:
 <p align="center">
   <img src="./assets/supportflow-chat.png" alt="SupportFlow multilingual chat" width="900">
 </p>
--->
+
+<p align="center">
+  <img src="./assets/supportflow-mobile.png" alt="SupportFlow multilingual chat" width="900">
+</p>
+
 
 ---
 

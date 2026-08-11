@@ -11,7 +11,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://multilingual-chat-support.vercel.app/",
+      "https://chat-support-tawny.vercel.app//",
     ],
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
